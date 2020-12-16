@@ -1,15 +1,18 @@
 package com.github.gabrielffguimaraes.libraryapi.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gabrielffguimaraes.libraryapi.api.dto.BookDto;
 import com.github.gabrielffguimaraes.libraryapi.api.model.entity.Book;
 import com.github.gabrielffguimaraes.libraryapi.api.service.BookService;
 import lombok.var;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -72,10 +76,19 @@ public class BookControllerTests {
 
     @Test
     @DisplayName("deve lançar um erro de validação ao criar um livro")
-    public void createInvalidBookTest(){
-        // ambiente
-
+    public void createInvalidBookTest() throws Exception {
+        // cenário
+        String json = new ObjectMapper().writeValueAsString(new BookDto());
+        var req = MockMvcRequestBuilders
+                .post(BOOK_API)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+        mvc.perform(req)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(4)));
         // execução
+
 
         // teste
     }
