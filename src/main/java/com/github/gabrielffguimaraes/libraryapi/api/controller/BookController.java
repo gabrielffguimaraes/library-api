@@ -2,19 +2,17 @@ package com.github.gabrielffguimaraes.libraryapi.api.controller;
 
 import com.github.gabrielffguimaraes.libraryapi.api.dto.BookDto;
 import com.github.gabrielffguimaraes.libraryapi.api.exceptions.ApiErrors;
-import com.github.gabrielffguimaraes.libraryapi.api.model.entity.Book;
-import com.github.gabrielffguimaraes.libraryapi.api.service.BookService;
+import com.github.gabrielffguimaraes.libraryapi.exception.BusinessException;
+import com.github.gabrielffguimaraes.libraryapi.model.entity.Book;
+import com.github.gabrielffguimaraes.libraryapi.service.BookService;
 import lombok.AllArgsConstructor;
-import lombok.var;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
@@ -37,5 +35,11 @@ public class BookController {
     public ApiErrors handlerErrorsExceptions(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         return new ApiErrors(bindingResult);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrors handlerBusinessExceptions(BusinessException ex ){
+        return new ApiErrors(ex);
     }
 }

@@ -1,18 +1,16 @@
 package com.github.gabrielffguimaraes.libraryapi.api.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.gabrielffguimaraes.libraryapi.api.dto.BookDto;
-import com.github.gabrielffguimaraes.libraryapi.api.model.entity.Book;
-import com.github.gabrielffguimaraes.libraryapi.api.service.BookService;
+import com.github.gabrielffguimaraes.libraryapi.model.entity.Book;
+import com.github.gabrielffguimaraes.libraryapi.service.BookService;
+import com.github.gabrielffguimaraes.libraryapi.exception.BusinessException;
 import lombok.var;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -52,11 +50,7 @@ public class BookControllerTests {
                 .isbn("123456").build();
         BDDMockito.given(bookService.save(Mockito.any(Book.class))).willReturn(savedBook);
 
-        var bookDto = new BookDto()
-                .builder()
-                .title("As aventuras de merlin")
-                .author("Author")
-                .isbn("123456").build();
+        var bookDto = this.createNewBook();
 
         String json = new ObjectMapper().writeValueAsString(bookDto);
         var request = MockMvcRequestBuilders
@@ -84,12 +78,38 @@ public class BookControllerTests {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
+
+        // execução e teste
         mvc.perform(req)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(4)));
+                .andExpect(MockMvcResultMatchers.jsonPath("errors").exists());
+    }
+
+    @Test
+    @DisplayName("deve lançar erro ao criar um livro com isbn duplicado")
+    public void createBookWithDuplicatedIsbn() throws Exception {
+        // cenário
+        var bookDto = createNewBook();
+        String json = new ObjectMapper().writeValueAsString(bookDto);
+        String erroMsg = "Erro de isbn duplicado";
+        BDDMockito.given(bookService.save(Mockito.any(Book.class))).willThrow(new BusinessException(erroMsg));
+        var req = MockMvcRequestBuilders.
+                post(BOOK_API).
+                contentType(MediaType.APPLICATION_JSON).
+                accept(MediaType.APPLICATION_JSON).
+                content(json);
         // execução
-
-
+        mvc.perform(req)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("errors").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value(erroMsg));
         // teste
+    }
+    private BookDto createNewBook(){
+        return new BookDto()
+                .builder()
+                .title("As aventuras de merlin")
+                .author("Author")
+                .isbn("123456").build();
     }
 }

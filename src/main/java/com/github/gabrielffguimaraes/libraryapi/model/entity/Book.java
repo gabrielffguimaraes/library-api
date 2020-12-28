@@ -1,10 +1,10 @@
-package com.github.gabrielffguimaraes.libraryapi.api.model.entity;
+package com.github.gabrielffguimaraes.libraryapi.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Data
 @Builder
@@ -12,8 +12,13 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Entity
 public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String title;
+    @Column
     private String author;
+    @Column
     private String isbn;
 }
