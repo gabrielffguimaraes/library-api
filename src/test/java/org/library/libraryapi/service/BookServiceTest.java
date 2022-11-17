@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.library.libraryapi.model.dto.BookDTO;
 import org.library.libraryapi.model.entity.Book;
 import org.library.libraryapi.repository.BookRepository;
 import org.library.libraryapi.service.imp.BookServiceImp;
@@ -41,14 +42,14 @@ public class BookServiceTest {
         //Mockito.when()
 
         // execução
-        Book book1 = new Book();
+        BookDTO book1 = new BookDTO();
         book.setId(1l);
         book.setIsbn("123");
         book.setAuthor("Fulano");
         book.setTitle("As aventuras");
-        Mockito.when(service.save(Mockito.any(Book.class))).thenReturn(book);
+        Mockito.when(service.save(Mockito.any(BookDTO.class))).thenReturn(book);
 
-        Book savedBook = service.save(book);
+        Book savedBook = service.save(book1);
         System.out.println(savedBook);
         // verificacao
         Assertions.assertNotNull(savedBook.getId());
