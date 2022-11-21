@@ -22,4 +22,16 @@ public class BookController {
     public ResponseEntity<Book> save(@RequestBody @Valid BookDTO book) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.save(book));
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<BookDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.findById(id));
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        bookService.deleteById(id);
+    }
+
 }
