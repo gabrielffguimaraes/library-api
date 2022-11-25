@@ -25,4 +25,6 @@ public class Book {
     String author;
     @Column
     String title;
+    @Column
+    String bookCover;
 }

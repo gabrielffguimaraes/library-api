@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.library.libraryapi.model.entity.Book;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.validation.constraints.NotBlank;
@@ -21,4 +22,6 @@ public class BookDTO {
     String author;
     @NotBlank(message = "Título do livro obrigatório")
     String title;
+
+    String bookCover;
 }

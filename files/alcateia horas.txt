@@ -1,0 +1,10 @@
+esconder ou mostrar grupo de colunas workflow gravacao /personagem 			3 hrs / 10.11.2022 
+
+esconder ou mostrar grupo de colunas workflow gravacao /dublador			2 hrs / 11.11.2022 
+
+problema de redireconamento errado após salva no disquete na aba checagem		5 hrs / 12.11.2022 
+retornar para o programa na setinha do menu workflow
+esconder ou mostrar grupo de colunas workflow gravacao /estudio	
+modificações e ajustes de estilo css workflow gravacao
+
+adicionar campo multi-language orçamento dublagem 					3 hrs / 19.11.2022

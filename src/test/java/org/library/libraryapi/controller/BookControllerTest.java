@@ -39,7 +39,7 @@ public class BookControllerTest {
 
     @MockBean
     BookService service;
-    static String BOOK_API = "/api/books";
+    static String BOOK_API = "/api/v1/books";
 
     @Test
     @DisplayName("Deve criar um livro com sucesso .")
@@ -174,11 +174,14 @@ public class BookControllerTest {
     @Test
     @DisplayName("Deve atualizar um livro com sucesso")
     public void shouldUpdateBook() throws Exception {
+        // cenário
         BookDTO bookDTO = BookFactory.createBookDto();
 
-        BookDTO bookSaved = BookFactory.createBookDto();
-        bookSaved.setAuthor("Teste");
-        bookSaved.setIsbn("isbn 12345678");
+        BookDTO bookToUpdate = BookFactory.createBookDto();
+        bookToUpdate.setAuthor("Teste");
+        bookToUpdate.setIsbn("isbn 12345678");
+
+        Mockito.when(this.service.update(Mockito.any(BookDTO.class),Mockito.anyLong())).thenReturn(bookToUpdate);
 
         var json = new ObjectMapper().writeValueAsString(bookDTO);
         var request = MockMvcRequestBuilders
@@ -186,10 +189,12 @@ public class BookControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
+        // execuçao & testes
         mvc.perform(request)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(bookDTO.getId()))
-                .andExpect(jsonPath("author").value("Teste"))
-                .andExpect(jsonPath("isbn").value("isbn 1245678"));
+                .andExpect(jsonPath("author").value(bookToUpdate.getAuthor()))
+                .andExpect(jsonPath("isbn").value(bookToUpdate.getIsbn()));
     }
+
 }
