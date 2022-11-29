@@ -196,5 +196,4 @@ public class BookControllerTest {
                 .andExpect(jsonPath("author").value(bookToUpdate.getAuthor()))
                 .andExpect(jsonPath("isbn").value(bookToUpdate.getIsbn()));
     }
-
 }
